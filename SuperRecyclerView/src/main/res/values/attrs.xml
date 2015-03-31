@@ -2,6 +2,7 @@
 <resources>
 
     <declare-styleable name="superrecyclerview">
+        <attr name="layout_error" format="reference"/>
         <attr name="layout_empty" format="reference"/>
         <attr name="layout_moreProgress" format="reference"/>
         <attr name="layout_progress" format="reference"/>
