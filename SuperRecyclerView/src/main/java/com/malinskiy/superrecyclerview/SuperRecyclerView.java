@@ -24,9 +24,12 @@ public class SuperRecyclerView extends FrameLayout {
     protected ViewStub     mProgress;
     protected ViewStub     mMoreProgress;
     protected ViewStub     mEmpty;
+    protected ViewStub     mError;
     protected View         mProgressView;
     protected View         mMoreProgressView;
     protected View         mEmptyView;
+    protected View         mErrorView;
+    
 
     protected boolean mClipToPadding;
     protected int     mPadding;
@@ -36,6 +39,7 @@ public class SuperRecyclerView extends FrameLayout {
     protected int     mPaddingRight;
     protected int     mScrollbarStyle;
     protected int     mEmptyId;
+    protected int     mErrorId;
     protected int     mMoreProgressId;
 
     protected LAYOUT_MANAGER_TYPE layoutManagerType;
@@ -113,6 +117,13 @@ public class SuperRecyclerView extends FrameLayout {
         if (mMoreProgressId != 0)
             mMoreProgressView = mMoreProgress.inflate();
         mMoreProgress.setVisibility(View.GONE);
+
+        // R.id.error需要在横竖主布局文件加入
+		mError = (ViewStub) v.findViewById(R.id.error);
+		mError.setLayoutResource(mErrorId);
+		if (mErrorId != 0)
+			mErrorView = mError.inflate();
+		mError.setVisibility(View.GONE);
 
         mEmpty = (ViewStub) v.findViewById(R.id.empty);
         mEmpty.setLayoutResource(mEmptyId);
@@ -290,6 +301,9 @@ public class SuperRecyclerView extends FrameLayout {
                 } else if (mEmptyId != 0) {
                     mEmpty.setVisibility(View.GONE);
                 }
+                else if (mErrorId != 0) {
+					mError.setVisibility(View.GONE);
+				}
             }
         });
         if ((adapter == null || adapter.getItemCount() == 0) && mEmptyId != 0) {
@@ -327,6 +341,7 @@ public class SuperRecyclerView extends FrameLayout {
     public void showProgress() {
         hideRecycler();
         if (mEmptyId != 0) mEmpty.setVisibility(View.INVISIBLE);
+        if (mErrorId != 0) mError.setVisibility(View.INVISIBLE);
         mProgress.setVisibility(View.VISIBLE);
     }
 
@@ -338,6 +353,21 @@ public class SuperRecyclerView extends FrameLayout {
         mRecycler.setVisibility(View.VISIBLE);
     }
 
+	public void showError() {
+		if (mRecycler.getAdapter().getItemCount() == 0) {
+			mError.setVisibility(View.VISIBLE);
+			mEmpty.setVisibility(View.GONE);
+		}
+	}
+
+	public void hideError() {
+		mError.setVisibility(View.GONE);
+	}
+	
+	public View getErrorView() {
+		return mErrorView;
+	}
+    
     public void showMoreProgress() {
         mMoreProgress.setVisibility(View.VISIBLE);
 
